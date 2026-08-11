@@ -1,0 +1,103 @@
+================================================================================
+UNIVERSITY OF TECHNOLOGY & SCIENCE - COMPREHENSIVE STUDY HANDBOOK
+================================================================================
+
+--------------------------------------------------------------------------------
+MODULE 1: OPERATING SYSTEMS & SYSTEM PROGRAMMING (CS-302)
+--------------------------------------------------------------------------------
+1.1 Memory Allocation Strategies
+* First Fit: Allocates the first hole that is big enough. Searching stops as 
+  soon as a suitable free block is found.
+* Best Fit: Allocates the smallest hole that is big enough. Must search the 
+  entire list, unless sorted by size. Produces the smallest leftover hole.
+* Worst Fit: Allocates the largest hole available. Must search the entire 
+  list unless sorted. Leaves the largest remaining block for future use.
+
+1.2 Process Scheduling Algorithms
++-----------------------+---------------------+-------------------+-----------------+
+| Algorithm             | Preemptive/Non-P.   | Primary Metric    | Known Drawback   |
++-----------------------+---------------------+-------------------+-----------------+
+| First-Come, First-S.  | Non-Preemptive      | Arrival Time      | Convoy Effect   |
+| Shortest Job First    | Non-Preemptive      | Burst Time        | Starvation      |
+| Round Robin (RR)      | Preemptive          | Time Quantum      | High Context Sw.|
+| Priority Scheduling   | Both Supported      | Priority Level    | Indefinite Delay|
++-----------------------+---------------------+-------------------+-----------------+
+
+--------------------------------------------------------------------------------
+MODULE 2: DATABASE MANAGEMENT SYSTEMS & NO-SQL (CS-304)
+--------------------------------------------------------------------------------
+2.1 ACID Properties in Relational Databases
+- Atomicity: Guarantees that all operations within a work unit are completed 
+  successfully; otherwise, the transaction is aborted at the point of failure.
+- Consistency: Ensures that the database properly changes states upon a 
+  successfully committed transaction.
+- Isolation: Enables transactions to operate independently and transparently 
+  to each other.
+- Durability: Ensures that the result or outcome of a committed transaction 
+  persists even in the event of a system failure.
+
+2.2 SQL vs Document NoSQL (e.g., PostgreSQL vs MongoDB)
+- Relational (SQL): Strict schema enforcement, table-based row-column storage, 
+  normalized relationships via primary/foreign keys. Ideal for complex JOINs.
+- Document (NoSQL): Flexible JSON/BSON schema, embedded documents/arrays, 
+  designed for high horizontal scalability and rapid iteration cycles.
+
+--------------------------------------------------------------------------------
+MODULE 3: MODERN WEB ARCHITECTURE & FULL-STACK (CS-401)
+--------------------------------------------------------------------------------
+3.1 Client-Side Frameworks (React & Next.js)
+- Virtual DOM: A lightweight in-memory representation of the real DOM. React 
+  calculates differences (reconciliation) before applying targeted updates.
+- Server-Side Rendering (SSR): Renders dynamic HTML on the server per request, 
+  improving Initial Page Load speed and SEO performance.
+- Client-Side Rendering (CSR): Loads a minimal HTML document and relies on 
+  JavaScript executing in the browser to build the dynamic UI.
+
+3.2 REST vs GraphQL APIs
+- REST: Uses HTTP verbs (GET, POST, PUT, DELETE) over specific resource endpoints. 
+  Can suffer from over-fetching or under-fetching data.
+- GraphQL: Single endpoint protocol that allows clients to declare exact data 
+  requirements in a query schema, preventing over-fetching.
+
+--------------------------------------------------------------------------------
+MODULE 4: ARTIFICIAL INTELLIGENCE & RAG PIPELINES (CS-408)
+--------------------------------------------------------------------------------
+4.1 Fundamentals of Retrieval-Augmented Generation (RAG)
+RAG combines retrieval mechanisms with generative language models to ground 
+answers on proprietary or context-specific documents.
+
+Key Stages of RAG:
+1. Document Ingestion & Parsing: Extract text from PDFs, text files, or HTML.
+2. Chunking Strategy: Splitting documents into smaller passages (e.g., 500 
+   tokens with 50-token overlap) to fit embedding model context windows.
+3. Embedding Generation: Converting chunks into high-dimensional vector space 
+   using models like OpenAI text-embedding-ada-002 or HuggingFace embeddings.
+4. Vector Indexing & Storage: Storing vectors in vector databases (Pinecone, 
+   ChromaDB, FAISS) with index types like HNSW for fast similarity retrieval.
+5. Query Retrieval: Converting user questions to embeddings and retrieving top-k 
+   nearest chunks using cosine similarity or Euclidean distance.
+6. Context Augmentation & Generation: Injecting retrieved chunks into the prompt 
+   template alongside the original question for the LLM.
+
+4.2 RAG Evaluation Metrics
+- Context Relevance: Are the retrieved context chunks directly relevant to the query?
+- Groundedness (Faithfulness): Is the generated answer supported strictly by 
+  the retrieved context without hallucinations?
+- Answer Relevance: Does the generated response directly answer the user query?
+
+--------------------------------------------------------------------------------
+MODULE 5: UNIVERSITY POLICY, DATES & GRADING SCHEME
+--------------------------------------------------------------------------------
+* Attendance Requirement: Minimum 75% attendance is mandatory to sit for the 
+  Final Semester Examination.
+* Grading Scale:
+  - 85% and above : Grade A (4.0 GPA)
+  - 80% - 84%     : Grade A- (3.7 GPA)
+  - 75% - 79%     : Grade B+ (3.3 GPA)
+  - 70% - 74%     : Grade B  (3.0 GPA)
+  - Below 50%     : Fail (F - 0.0 GPA)
+
+Important Dates:
+- Course Add/Drop Deadline: September 10
+- Midterm Project Submission: October 20
+- Final RAG System Demonstration Day: December 15
