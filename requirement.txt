@@ -1,63 +1,11 @@
-# ==============================
-# LangChain Core
-# ==============================
+streamlit
 langchain
 langchain-core
 langchain-community
 langchain-text-splitters
-
-# ==============================
-# Mistral AI
-# ==============================
 langchain-mistralai
-mistralai
-
-# ==============================
-# Vector Database
-# ==============================
-chromadb
 langchain-chroma
-
-# ==============================
-# Document Loaders
-# ==============================
+chromadb
 pypdf
-python-docx
-unstructured
-
-# ==============================
-# Embeddings
-# ==============================
 sentence-transformers
-
-# ==============================
-# Environment Variables
-# ==============================
 python-dotenv
-
-# ==============================
-# Web / HTTP
-# ==============================
-requests
-httpx
-
-# ==============================
-# Numerical / ML Dependencies
-# ==============================
-numpy
-
-# ==============================
-# Streamlit UI
-# ==============================
-streamlit
-
-# ==============================
-# Optional: Markdown / HTML
-# ==============================
-beautifulsoup4
-markdown
-
-# ==============================
-# Optional: Tokenization
-# ==============================
-tiktoken
