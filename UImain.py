@@ -14,7 +14,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
-from langchain_mistralai import ChatMistralAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 
 
@@ -127,13 +127,14 @@ def get_embedding_model():
 
 
 # ============================================================
-# LOAD MISTRAL MODEL ONCE
+# LOAD GROQ MODEL ONCE
 # ============================================================
 
 @st.cache_resource
 def get_llm():
-    return ChatMistralAI(
-        model="mistral-small-latest"
+    return ChatGroq(
+        model="llama-3.3-70b-versatile",
+        temperature=0
     )
 
 
@@ -363,7 +364,7 @@ if st.session_state.retriever is None:
             """
             ### 🤖 Ask
 
-            Mistral AI generates an answer using the retrieved context.
+            Groq AI generates an answer using the retrieved context.
             """
         )
 

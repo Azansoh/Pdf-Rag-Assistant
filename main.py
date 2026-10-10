@@ -1,6 +1,7 @@
+import os
 from dotenv import load_dotenv
-from langchain_mistralai import ChatMistralAI
-from langchain_chroma import Chroma  # Updated to avoid deprecation warnings
+from langchain_groq import ChatGroq
+from langchain_chroma import Chroma
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_huggingface import HuggingFaceEmbeddings
 
@@ -19,9 +20,10 @@ retriever = vectorstore.as_retriever(
     search_kwargs={"k": 4, "fetch_k": 10, "lambda_mult": 0.5}
 )
 
-# FIXED: Use official Mistral API model name
-llm = ChatMistralAI(
-    model="mistral-small-latest"
+# FIXED: Use Groq LLM with Llama 3 model
+llm = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    temperature=0
 )
 
 # Prompt Template
