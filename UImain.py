@@ -3,7 +3,12 @@ import hashlib
 import tempfile
 
 import streamlit as st
-from dotenv import load_dotenv
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -16,8 +21,6 @@ from langchain_core.prompts import ChatPromptTemplate
 # ============================================================
 # CONFIGURATION
 # ============================================================
-
-load_dotenv()
 
 st.set_page_config(
     page_title="PDF RAG Assistant",
@@ -212,14 +215,9 @@ with st.sidebar:
 
 if uploaded_file is not None:
 
-    # Read the uploaded file into memory.
     file_bytes = uploaded_file.getvalue()
-
-    # Create a hash from the actual PDF content.
-    # This is better than checking only the filename.
     file_hash = hashlib.md5(file_bytes).hexdigest()
 
-    # Process only when the PDF content is different.
     is_new_document = (
         file_hash != st.session_state.uploaded_file_hash
     )
@@ -232,10 +230,6 @@ if uploaded_file is not None:
 
             with st.spinner("📚 Processing your PDF..."):
 
-                # ------------------------------------------------
-                # Save uploaded PDF temporarily
-                # ------------------------------------------------
-
                 pdf_path = os.path.join(
                     temp_dir,
                     uploaded_file.name
@@ -244,10 +238,6 @@ if uploaded_file is not None:
                 with open(pdf_path, "wb") as f:
                     f.write(file_bytes)
 
-                # ------------------------------------------------
-                # Load PDF
-                # ------------------------------------------------
-
                 loader = PyPDFLoader(pdf_path)
                 documents = loader.load()
 
@@ -255,10 +245,6 @@ if uploaded_file is not None:
                     raise ValueError(
                         "The PDF does not contain readable content."
                     )
-
-                # ------------------------------------------------
-                # Split text
-                # ------------------------------------------------
 
                 splitter = RecursiveCharacterTextSplitter(
                     chunk_size=chunk_size,
@@ -272,20 +258,7 @@ if uploaded_file is not None:
                         "No text chunks could be created from the PDF."
                     )
 
-                # ------------------------------------------------
-                # Load embedding model
-                # ------------------------------------------------
-
                 embedding_model = get_embedding_model()
-
-                # ------------------------------------------------
-                # IMPORTANT:
-                # Create a separate ChromaDB directory for every
-                # different PDF.
-                #
-                # We NEVER delete an existing ChromaDB directory.
-                # This prevents Windows WinError 32 file-lock errors.
-                # ------------------------------------------------
 
                 chroma_root = "./chroma_db"
 
@@ -298,11 +271,6 @@ if uploaded_file is not None:
                     chroma_root,
                     file_hash
                 )
-
-                # ------------------------------------------------
-                # Reuse database if this exact PDF was processed
-                # before. Otherwise create a new database.
-                # ------------------------------------------------
 
                 if os.path.exists(chroma_directory):
 
@@ -319,10 +287,6 @@ if uploaded_file is not None:
                         persist_directory=chroma_directory
                     )
 
-                # ------------------------------------------------
-                # Create retriever
-                # ------------------------------------------------
-
                 retriever = vectorstore.as_retriever(
                     search_type="mmr",
                     search_kwargs={
@@ -331,10 +295,6 @@ if uploaded_file is not None:
                         "lambda_mult": 0.5
                     }
                 )
-
-                # ------------------------------------------------
-                # Save active document information
-                # ------------------------------------------------
 
                 st.session_state.vectorstore = vectorstore
                 st.session_state.retriever = retriever
@@ -360,8 +320,6 @@ if uploaded_file is not None:
 
         finally:
 
-            # Remove only the temporary uploaded PDF folder.
-            # We NEVER remove chroma_db here.
             try:
                 if os.path.exists(temp_dir):
                     import shutil
@@ -411,10 +369,6 @@ if st.session_state.retriever is None:
 
 else:
 
-    # ========================================================
-    # DOCUMENT INFORMATION
-    # ========================================================
-
     st.markdown(
         f"""
         <div class="info-card">
@@ -424,10 +378,6 @@ else:
         """,
         unsafe_allow_html=True
     )
-
-    # ========================================================
-    # CHAT HISTORY
-    # ========================================================
 
     for message in st.session_state.chat_history:
 
@@ -455,10 +405,6 @@ else:
                 unsafe_allow_html=True
             )
 
-            # ------------------------------------------------
-            # Sources
-            # ------------------------------------------------
-
             if message.get("sources"):
 
                 with st.expander("📚 View Sources"):
@@ -477,19 +423,11 @@ else:
                             unsafe_allow_html=True
                         )
 
-    # ========================================================
-    # USER QUESTION
-    # ========================================================
-
     query = st.chat_input(
         "Ask a question about your PDF..."
     )
 
     if query:
-
-        # ----------------------------------------------------
-        # Save user question
-        # ----------------------------------------------------
 
         st.session_state.chat_history.append(
             {
@@ -500,14 +438,8 @@ else:
 
         try:
 
-            # ------------------------------------------------
-            # Retrieve relevant documents
-            # ------------------------------------------------
-
             with st.spinner("🔍 Searching the document..."):
 
-                # Recreate retriever so the current top_k slider
-                # value is always respected.
                 retriever = st.session_state.vectorstore.as_retriever(
                     search_type="mmr",
                     search_kwargs={
@@ -519,17 +451,9 @@ else:
 
                 docs = retriever.invoke(query)
 
-            # ------------------------------------------------
-            # Build context
-            # ------------------------------------------------
-
             context = "\n\n".join(
                 [doc.page_content for doc in docs]
             )
-
-            # ------------------------------------------------
-            # Prompt
-            # ------------------------------------------------
 
             prompt = ChatPromptTemplate.from_messages(
                 [
@@ -564,10 +488,6 @@ else:
                 ]
             )
 
-            # ------------------------------------------------
-            # Mistral AI
-            # ------------------------------------------------
-
             llm = get_llm()
 
             final_prompt = prompt.invoke(
@@ -577,18 +497,10 @@ else:
                 }
             )
 
-            # ------------------------------------------------
-            # Generate answer
-            # ------------------------------------------------
-
             with st.spinner("🤖 Generating answer..."):
 
                 response = llm.invoke(final_prompt)
                 answer = response.content
-
-            # ------------------------------------------------
-            # Source information
-            # ------------------------------------------------
 
             sources = []
 
@@ -604,10 +516,6 @@ else:
                         "content": doc.page_content[:500]
                     }
                 )
-
-            # ------------------------------------------------
-            # Save AI response
-            # ------------------------------------------------
 
             st.session_state.chat_history.append(
                 {
