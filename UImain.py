@@ -133,7 +133,7 @@ def get_embedding_model():
 @st.cache_resource
 def get_llm():
     return ChatGroq(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         temperature=0
     )
 

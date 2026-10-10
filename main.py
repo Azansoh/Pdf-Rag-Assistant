@@ -22,7 +22,7 @@ retriever = vectorstore.as_retriever(
 
 # FIXED: Use Groq LLM with Llama 3 model
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
+    model="openai/gpt-oss-120b",
     temperature=0
 )
 
